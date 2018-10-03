@@ -8,7 +8,7 @@ jobs:
   include:
   - stage: test
     install:
-    - pip install --user pipenv
+    - pip install pipenv
     - pipenv --python 3.6
     - pipenv install --dev
     script:
