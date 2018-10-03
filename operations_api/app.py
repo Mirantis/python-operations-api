@@ -3,7 +3,7 @@ import logging.config
 import os
 from flask import Flask, Blueprint
 
-from operations_api.v1.api.model.endpoints import ns as model_namespace
+from operations_api.v1.model import ns as v1_model_namespace
 from operations_api.restplus import api
 from operations_api.database import db
 from operations_api.config import settings
@@ -27,9 +27,9 @@ def configure_app(flask_app):
 def initialize_app(flask_app):
     configure_app(flask_app)
 
-    blueprint = Blueprint('api', __name__, url_prefix='/api')
+    blueprint = Blueprint('api', __name__, url_prefix='/api/v1')
     api.init_app(blueprint)
-    api.add_namespace(model_namespace)
+    api.add_namespace(v1_model_namespace)
     flask_app.register_blueprint(blueprint)
 
     db.init_app(flask_app)

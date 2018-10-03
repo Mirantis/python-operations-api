@@ -10,4 +10,4 @@ python_version = '3.6'
 'e1839a8' = {path = ".", editable = true}
 
 [dev-packages]
-"pytest-flake8" = "*"
+"e1839a8" = {extras = ["dev"], editable = true, path = "."}
