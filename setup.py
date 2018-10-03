@@ -17,6 +17,7 @@ setup(
     install_requires=[
         'cryptography==2.3.1',
         'Flask==1.0.2',
+        'flask_oidc==1.4.0',
         'flask-restplus==0.12.1',
         'flask-swagger-ui',
         'flask_sqlalchemy==2.3.2',
