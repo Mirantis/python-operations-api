@@ -6,7 +6,7 @@ from flask_restplus import Api
 from operations_api.config import settings
 from sqlalchemy.orm.exc import NoResultFound
 
-from .modelform.endpoints import api as modelform
+from operations_api.v1.modelform.endpoints import api as modelform
 
 log = logging.getLogger(__name__)
 

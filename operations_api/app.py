@@ -2,9 +2,11 @@ import logging.config
 import os
 
 from flask import Flask
-from operations_api.v1 import blueprint as api
+
+from flask_oidc import OpenIDConnect
 from operations_api.database import db
 from operations_api.config import settings
+
 
 app = Flask(__name__)
 logging_conf_path = os.path.normpath(os.path.join(os.path.dirname(__file__), 'config', 'logging.conf'))
@@ -36,18 +38,20 @@ def configure_app_auth(flask_app):
 
 def initialize_app(flask_app):
     configure_app(flask_app)
+
     global oidc
     configure_app_auth(app)
     oidc = OpenIDConnect(app)
+    from operations_api.v1 import blueprint as api
     flask_app.register_blueprint(api, url_prefix='/api/v1')
-
     db.init_app(flask_app)
 
 
 def run():
     initialize_app(app)
+    app.app_context().push()
 
     log.info('>>>>> Starting server at http://{}/api/ <<<<<'.format(app.config['SERVER_NAME']))
-    app.run(host= settings.FLASK_SERVER_HOST,
+    app.run(host=settings.FLASK_SERVER_HOST,
             port=int(settings.FLASK_SERVER_PORT),
             debug=settings.FLASK_DEBUG)
