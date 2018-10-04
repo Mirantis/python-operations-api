@@ -3,7 +3,7 @@ import logging.config
 import os
 from flask import Flask, Blueprint
 
-from operations_api.v1.model import ns as v1_model_namespace
+from operations_api.v1.model.endpoints import ns as v1_model_namespace
 from operations_api.restplus import api
 from operations_api.database import db
 from operations_api.config import settings
