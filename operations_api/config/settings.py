@@ -1,6 +1,7 @@
 # Flask settings
 FLASK_SERVER_NAME = 'localhost:8001'
 FLASK_DEBUG = True
+FLASK_SECRET_KEY = ''
 
 # Flask-Restplus settings
 RESTPLUS_SWAGGER_UI_DOC_EXPANSION = 'list'
