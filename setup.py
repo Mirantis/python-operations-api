@@ -19,9 +19,11 @@ setup(
         'flask-restplus==0.12.1',
         'flask-swagger-ui',
         'flask_sqlalchemy==2.3.2',
+        'SQLAlchemy-Utils==0.33.5'
     ],
     tests_require=[
-        'flake8'],
+        'flake8'
+    ],
     extras_require={
         'test': test_require,
         'dev': test_require
