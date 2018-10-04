@@ -2,8 +2,8 @@
 venv/
 # vim swp files
 .*.swp
-# static dir
-/static/
+# pycache
+__pycache__
 
 # Distribution / packaging
 .Python
