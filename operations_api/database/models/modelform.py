@@ -1,12 +1,12 @@
 import uuid
 
-from flask import current_app as app
 from sqlalchemy_utils import EncryptedType, UUIDType
 from sqlalchemy_utils.types.encrypted.encrypted_type import AesEngine
 
-from operations_api.database import db
+from operations_api.config import settings
+from operations_api.app import db
 
-SECRET_KEY = app.config['SECRET_KEY']
+SECRET_KEY = settings.FLASK_SECRET_KEY
 
 
 def generate_uuid():
