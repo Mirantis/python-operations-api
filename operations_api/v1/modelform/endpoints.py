@@ -1,7 +1,6 @@
 from flask import request
 from flask_restplus import Namespace, Resource, fields
-from operations_api.database import db  # noqa
-from operations_api.app import oidc
+from operations_api.app import db, oidc  # noqa
 
 api = Namespace('modelform', description='Model Form related operations')
 
@@ -11,7 +10,7 @@ forminstance = api.model('FormInstance', {
 })
 
 
-@api.route('/template')
+@api.route('/')
 @api.doc(params={
     'uuid': 'Form instance ID (UUID)'
 })

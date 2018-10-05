@@ -3,17 +3,13 @@ import os
 
 from flask import Flask
 
-from flask_oidc import OpenIDConnect
-from operations_api.database import db
 from operations_api.config import settings
+from operations_api.extensions import db, oidc
+from operations_api.v1 import blueprint as api
 
-
-app = Flask(__name__)
 logging_conf_path = os.path.normpath(os.path.join(os.path.dirname(__file__), 'config', 'logging.conf'))
 logging.config.fileConfig(logging_conf_path)
 log = logging.getLogger('operations_api')
-
-oidc = None
 
 
 def configure_app(flask_app):
@@ -28,7 +24,7 @@ def configure_app(flask_app):
 
 def configure_app_auth(flask_app):
     # TODO: Use parameters from config
-    flask_app.config['OIDC_CLIENT_SECRETS'] = 'config/client_secrets.json'
+    flask_app.config['OIDC_CLIENT_SECRETS'] = 'operations_api/config/client_secrets.json'
     flask_app.config['OIDC_OPENID_REALM'] = 'Demo'
     flask_app.config['OIDC_INTROSPECTION_AUTH_METHOD'] = 'bearer'
     flask_app.config['SCOPES'] = ['openid']
@@ -36,21 +32,23 @@ def configure_app_auth(flask_app):
     flask_app.config['OIDC_TOKEN_TYPE_HINT'] = 'access_token'
 
 
-def initialize_app(flask_app):
-    configure_app(flask_app)
-
-    global oidc
-    configure_app_auth(app)
-    oidc = OpenIDConnect(app)
-    from operations_api.v1 import blueprint as api
-    flask_app.register_blueprint(api, url_prefix='/api/v1')
+def register_extensions(flask_app):
     db.init_app(flask_app)
+    oidc.init_app(flask_app)
+
+
+def create_app():
+    flask_app = Flask(__name__)
+    configure_app(flask_app)
+    configure_app_auth(flask_app)
+    register_extensions(flask_app)
+    flask_app.register_blueprint(api, url_prefix='/api/v1')
+    return flask_app
 
 
 def run():
-    initialize_app(app)
+    app = create_app()
     app.app_context().push()
-
     log.info('>>>>> Starting server at http://{}/api/ <<<<<'.format(app.config['SERVER_NAME']))
     app.run(host=settings.FLASK_SERVER_HOST,
             port=int(settings.FLASK_SERVER_PORT),
