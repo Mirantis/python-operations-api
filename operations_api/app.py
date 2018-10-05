@@ -13,6 +13,8 @@ log = logging.getLogger('operations_api')
 
 
 def configure_app(flask_app):
+    flask_app.config['FLASK_SERVER_HOST'] = settings.FLASK_SERVER_HOST
+    flask_app.config['FLASK_SERVER_PORT'] = int(settings.FLASK_SERVER_PORT)
     flask_app.config['SECRET_KEY'] = settings.FLASK_SECRET_KEY or os.urandom(16)
     flask_app.config['SQLALCHEMY_DATABASE_URI'] = settings.SQLALCHEMY_DATABASE_URI
     flask_app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = settings.SQLALCHEMY_TRACK_MODIFICATIONS
@@ -49,7 +51,8 @@ def create_app():
 def run():
     app = create_app()
     app.app_context().push()
-    log.info('>>>>> Starting server at http://{}/api/ <<<<<'.format(app.config['SERVER_NAME']))
-    app.run(host=settings.FLASK_SERVER_HOST,
-            port=int(settings.FLASK_SERVER_PORT),
+    log.info('>>>>> Starting server at http://{0}:{1}/api/ <<<<<'.format(app.config['FLASK_SERVER_HOST'],
+                                                                         app.config['FLASK_SERVER_PORT']))
+    app.run(host=app.config['FLASK_SERVER_HOST'],
+            port=app.config['FLASK_SERVER_PORT'],
             debug=settings.FLASK_DEBUG)

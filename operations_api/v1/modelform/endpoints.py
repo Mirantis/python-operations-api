@@ -11,9 +11,9 @@ forminstance = api.model('FormInstance', {
 
 
 @api.route('/')
-@api.doc(params={
-    'uuid': 'Form instance ID (UUID)'
-})
+@api.doc(
+    params={'uuid': 'Form instance ID (UUID)'},
+    headers={'Authorization': 'Bearer {access_token}'})
 class ModelForm(Resource):
     @oidc.accept_token(require_token=True)
     def get(self):
