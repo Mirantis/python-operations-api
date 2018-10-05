@@ -1,0 +1,11 @@
+cryptography==2.3.1
+docutils==0.13.1
+Flask==1.0.2
+flask_oidc==1.4.0
+flask-restplus==0.12.1
+flask-swagger-ui
+flask_sqlalchemy==2.3.2
+ipaddress==1.0.18
+-e git+https://github.com/atengler/pygerrit@python3#egg=pygerrit-1.0.1-dev1
+PyYAML==3.11
+SQLAlchemy-Utils==0.33.5
