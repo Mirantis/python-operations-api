@@ -27,8 +27,7 @@ Installation notes
     pipenv install
     pipenv shell
 
-    cd operations_api
-    operations_api
+    python operations_api
 
 
 
