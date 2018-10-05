@@ -2,8 +2,11 @@
 venv/
 # vim swp files
 .*.swp
-# static dir
-/static/
+# pycache
+__pycache__
+
+# SQLite
+db.sqlite
 
 # Distribution / packaging
 .Python

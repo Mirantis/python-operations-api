@@ -1,10 +1,9 @@
 import logging.config
 
 import os
-from flask import Flask, Blueprint
+from flask import Flask
 
-from operations_api.v1.model.endpoints import ns as v1_model_namespace
-from operations_api.restplus import api
+from operations_api.v1 import blueprint as api
 from operations_api.database import db
 from operations_api.config import settings
 
@@ -16,6 +15,7 @@ log = logging.getLogger('operations_api')
 
 def configure_app(flask_app):
     flask_app.config['SERVER_NAME'] = settings.FLASK_SERVER_NAME
+    flask_app.config['SECRET_KEY'] = settings.FLASK_SECRET_KEY or os.urandom(16)
     flask_app.config['SQLALCHEMY_DATABASE_URI'] = settings.SQLALCHEMY_DATABASE_URI
     flask_app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = settings.SQLALCHEMY_TRACK_MODIFICATIONS
     flask_app.config['SWAGGER_UI_DOC_EXPANSION'] = settings.RESTPLUS_SWAGGER_UI_DOC_EXPANSION
@@ -26,12 +26,7 @@ def configure_app(flask_app):
 
 def initialize_app(flask_app):
     configure_app(flask_app)
-
-    blueprint = Blueprint('api', __name__, url_prefix='/api/v1')
-    api.init_app(blueprint)
-    api.add_namespace(v1_model_namespace)
-    flask_app.register_blueprint(blueprint)
-
+    flask_app.register_blueprint(api, url_prefix='/api/v1')
     db.init_app(flask_app)
 
 
