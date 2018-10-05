@@ -1,9 +1,6 @@
-from flask_sqlalchemy import SQLAlchemy
-
-db = SQLAlchemy()
+from operations_api.app import db
 
 
 def reset_database():
-    from operations_api.database.models import FormInstance  # noqa
     db.drop_all()
     db.create_all()

@@ -1,5 +1,6 @@
 # Flask settings
-FLASK_SERVER_NAME = 'localhost:8001'
+FLASK_SERVER_HOST = 'localhost'
+FLASK_SERVER_PORT = '8001'
 FLASK_DEBUG = True
 FLASK_SECRET_KEY = ''
 
