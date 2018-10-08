@@ -16,9 +16,8 @@ from cryptography.hazmat.backends import default_backend
 from docutils.core import publish_parts
 from ipaddress import IPv4Network
 from jinja2 import Environment, meta
-from pygerrit.rest import GerritRestAPI
+from pygerrit2 import GerritRestAPI, HTTPBasicAuth
 from requests import HTTPError
-from requests.auth import HTTPBasicAuth
 from os import urandom
 
 from operations_api import exceptions

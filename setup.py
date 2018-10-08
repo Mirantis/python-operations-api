@@ -23,12 +23,9 @@ setup(
         'flask-swagger-ui',
         'flask_sqlalchemy==2.3.2',
         'ipaddress==1.0.18',
-        'pygerrit>=1.0.1-dev1',
+        'pygerrit2==2.0.7',
         'PyYAML==3.11',
         'SQLAlchemy-Utils==0.33.5'
-    ],
-    dependency_links=[
-        'git+https://github.com/atengler/pygerrit.git@python3#egg=pygerrit-1.0.1-dev1'
     ],
     tests_require=[
         'flake8'
