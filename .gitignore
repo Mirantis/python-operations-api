@@ -1,12 +1,18 @@
 # virtualenv
 venv/
-# vim swp files
+
+# editor files
 .*.swp
+.vscode
+
 # pycache
 __pycache__
 
 # SQLite
 db.sqlite
+
+# local settings
+operations_api/local_settings.py
 
 # Distribution / packaging
 .Python

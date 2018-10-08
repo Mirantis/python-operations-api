@@ -6,6 +6,7 @@ from flask_restplus import Api
 from operations_api.config import settings
 from sqlalchemy.orm.exc import NoResultFound
 
+from operations_api import exceptions
 from operations_api.v1.modelform.endpoints import api as modelform
 from operations_api.v1.auth.endpoints import api as auth
 
@@ -33,3 +34,9 @@ def default_error_handler(e):
 def database_not_found_error_handler(e):
     log.warning(traceback.format_exc())
     return {'message': 'A database result was required but none was found.'}, 404
+
+
+@api.errorhandler(exceptions.HTTPError)
+def http_exception_error_handler(e):
+    log.warning(traceback.format_exc())
+    return {'message': 'Server could not handle your request, remote service is unavailable.'}, 503
