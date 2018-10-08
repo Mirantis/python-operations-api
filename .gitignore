@@ -11,6 +11,9 @@ __pycache__
 # SQLite
 db.sqlite
 
+# CockroachDB local data
+data/
+
 # local settings
 operations_api/local_settings.py
 

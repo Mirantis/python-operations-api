@@ -11,7 +11,7 @@ RESTPLUS_MASK_SWAGGER = False
 RESTPLUS_ERROR_404_HELP = False
 
 # SQLAlchemy settings
-SQLALCHEMY_DATABASE_URI = 'sqlite:///db.sqlite'
+SQLALCHEMY_DATABASE_URI = 'cockroachdb://oapi@localhost:26257/oapi'
 # Turn off the Flask-SQLAlchemy event system
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
