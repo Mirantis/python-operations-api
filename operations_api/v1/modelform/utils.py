@@ -63,7 +63,7 @@ def subnet(subnet, host_ip):
         ipaddr = str(list(network.hosts())[idx])
     except IndexError:
         ipaddr = "Host index is out of range of available addresses"
-    except:
+    except Exception:
         ipaddr = subnet.split('/')[0]
 
     return ipaddr
@@ -96,7 +96,7 @@ def netmask(subnet):
     try:
         network = IPv4Network(str(subnet))
         netmask = str(network.netmask)
-    except:
+    except Exception:
         netmask = "Cannot determine network mask"
 
     return netmask
@@ -355,7 +355,7 @@ class FormTemplateCollector(object):
             try:
                 response_json = json.loads(str(response.text))
                 response_text = response_json['message']
-            except:
+            except Exception:
                 response_text = response.text
             msg = "Could not get remote file from Github:\nSTATUS CODE: %s\nRESPONSE:\n%s" % (
                 str(response.status_code), response_text)
