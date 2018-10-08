@@ -28,7 +28,7 @@ setup(
         'SQLAlchemy-Utils==0.33.5'
     ],
     dependency_links=[
-        'https://github.com/atengler/pygerrit/tarball/python3#egg=pygerrit-1.0.1-dev1'
+         'git+https://github.com/atengler/pygerrit.git@python3#egg=pygerrit-1.0.1-dev1'
     ],
     tests_require=[
         'flake8'
