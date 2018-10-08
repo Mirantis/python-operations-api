@@ -4,7 +4,7 @@ import os
 from flask import Flask
 
 from operations_api.config import settings
-from operations_api.extensions import db, oidc
+from operations_api.extensions import cache, db, oidc  # noqa
 from operations_api.v1 import blueprint as api
 
 logging_conf_path = os.path.normpath(os.path.join(os.path.dirname(__file__), 'config', 'logging.conf'))
@@ -15,7 +15,7 @@ log = logging.getLogger('operations_api')
 def configure_app(flask_app):
     flask_app.config['FLASK_SERVER_HOST'] = settings.FLASK_SERVER_HOST
     flask_app.config['FLASK_SERVER_PORT'] = int(settings.FLASK_SERVER_PORT)
-    flask_app.config['SECRET_KEY'] = settings.FLASK_SECRET_KEY or os.urandom(16)
+    flask_app.config['SECRET_KEY'] = settings.FLASK_SECRET_KEY
     flask_app.config['SQLALCHEMY_DATABASE_URI'] = settings.SQLALCHEMY_DATABASE_URI
     flask_app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = settings.SQLALCHEMY_TRACK_MODIFICATIONS
     flask_app.config['SWAGGER_UI_DOC_EXPANSION'] = settings.RESTPLUS_SWAGGER_UI_DOC_EXPANSION
@@ -34,6 +34,14 @@ def configure_app_auth(flask_app):
     flask_app.config['OIDC_TOKEN_TYPE_HINT'] = 'access_token'
 
 
+def configure_app_modelform(flask_app):
+    modelform_keys = [key for key
+                      in dir(settings)
+                      if key.startswith('MODELFORM')]
+    for key in modelform_keys:
+        flask_app.config[key] = getattr(settings, key)
+
+
 def register_extensions(flask_app):
     db.init_app(flask_app)
     oidc.init_app(flask_app)
@@ -43,6 +51,7 @@ def create_app():
     flask_app = Flask(__name__)
     configure_app(flask_app)
     configure_app_auth(flask_app)
+    configure_app_modelform(flask_app)
     register_extensions(flask_app)
     flask_app.register_blueprint(api, url_prefix='/api/v1')
     return flask_app
@@ -51,6 +60,10 @@ def create_app():
 def run():
     app = create_app()
     app.app_context().push()
+    # TODO: remove after switching to proper database
+    if app.config['ENV'] == 'development':
+        db.drop_all()
+        db.create_all()
     log.info('>>>>> Starting server at http://{0}:{1}/api/ <<<<<'.format(app.config['FLASK_SERVER_HOST'],
                                                                          app.config['FLASK_SERVER_PORT']))
     app.run(host=app.config['FLASK_SERVER_HOST'],

@@ -3,14 +3,16 @@ language: python
 cache: pip
 python:
 - '3.6'
-
+env:
+  global:
+    - PIP_PROCESS_DEPENDENCY_LINKS=1
 jobs:
   include:
   - stage: test
     install:
     - pip install pipenv
     - pipenv --python 3.6
-    - pipenv install --dev
+    - pipenv install --dev --skip-lock
     script:
     - python3 -m flake8
 
