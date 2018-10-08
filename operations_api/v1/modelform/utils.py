@@ -283,14 +283,12 @@ class FormTemplateCollector(object):
     def _gerrit_get(self, endpoint_url):
         auth = HTTPBasicAuth(self.username, self.password)
         rest = GerritRestAPI(url=self.url, auth=auth)
-        response_body = ''
         try:
             response_body = rest.get(endpoint_url)
         except HTTPError as e:
             msg = "Failed to get response from Gerrit URL %s: %s" % (endpoint_url, str(e))
             log.error(msg)
-        except Exception as e:
-            log.exception(e)
+            raise exceptions.HTTPError
         return response_body
 
     @requires(['username', 'password', 'url', 'project_name', 'file_name'])
