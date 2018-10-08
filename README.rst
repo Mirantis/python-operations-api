@@ -17,6 +17,17 @@ Requirements
 Installation notes
 ------------------
 
+- Start CockroachDB server
+
+  ::
+
+    docker-compose up -d
+
+- Tested with:
+
+   - Docker 17.03.2-ce
+   - Docker Compose 1.22.0
+
 - Prepare python virtual environment
 
   ::
