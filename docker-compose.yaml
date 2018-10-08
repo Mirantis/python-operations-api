@@ -1,0 +1,38 @@
+version: '3.2'
+
+services:
+  roach-ui:
+    image: cockroachdb/cockroach
+    command: start --insecure
+    expose:
+     - "8080"
+     - "26257"
+    ports:
+     - "26257:26257"
+     - "8080:8080"
+    networks:
+     - roachnet
+  db-1:
+    image: cockroachdb/cockroach
+    command: start --insecure --join=roach-ui
+    networks:
+     - roachnet
+    volumes:
+     - ./data/db-1:/cockroach/cockroach-data
+  db-init:
+   image: cockroachdb/cockroach
+   networks:
+    - roachnet
+   volumes:
+     - ${PWD}/scripts:/scripts
+   entrypoint: "/bin/bash"
+   command: /scripts/setup_db.sh
+networks:
+  roachnet:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        -
+          # your docker env subnet
+          subnet: 172.16.253.0/24
