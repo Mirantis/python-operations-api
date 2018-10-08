@@ -426,11 +426,30 @@ class FormTemplateCollector(object):
             settings_overrides["initial_header_level"] = header_level
         if report_level is not None:  # starts from 1 too
             settings_overrides["report_level"] = report_level
-        parts = publish_parts(source=value.encode('utf-8'),
-                              writer_name="html4css1",
-                              settings_overrides=settings_overrides)
-        trimmed_parts = parts['html_body'][23:-8]
-        return trimmed_parts.decode('utf-8')
+
+        try:
+            parts = publish_parts(source=value.encode('utf-8'),
+                                  writer_name="html4css1",
+                                  settings_overrides=settings_overrides)
+            trimmed_parts = parts['html_body'][23:-8]
+        except Exception as e:
+            # return original .rst if HTML rendering failed
+            trimmed_parts = value
+            log.exception(e)
+
+        return trimmed_parts
+
+    def _update_template(self, obj):
+        """ Traverse rendered template and render all rst documentation into HTML.
+        """
+        if isinstance(obj, dict):
+            if 'doc' in obj:
+                obj['doc'] = self._render_doc(obj['doc'])
+            return {k: self._update_template(v) for k, v in obj.items()}
+        elif isinstance(obj, list):
+            return [self._update_template(elem) for elem in obj]
+        else:
+            return obj
 
     # PUBLIC
     def list_versions(self):
@@ -467,6 +486,7 @@ class FormTemplateCollector(object):
 
         try:
             rendered = yaml.load(tmpl.render(context))
+            self._update_template(rendered)
         except Exception as e:
             rendered = {}
             log.exception(e)
