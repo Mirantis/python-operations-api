@@ -15,6 +15,9 @@ SQLALCHEMY_DATABASE_URI = 'sqlite:///db.sqlite'
 # Turn off the Flask-SQLAlchemy event system
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+OIDC_CLIENT_SECRETS = 'operations_api/config/client_secrets.json'
+OIDC_OPENID_REALM = 'Demo'
+
 try:
     from operations_api.local_settings import *  # noqa
 except ImportError:
