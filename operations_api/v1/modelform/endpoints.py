@@ -19,7 +19,7 @@ forminstance = api.model('FormInstance', {
 })
 class TemplateList(Resource):
 
-    # @oidc.accept_token(require_token=True)
+    @oidc.accept_token(require_token=True)
     @api.marshal_list_with(forminstance)
     def get(self):
         """
@@ -27,7 +27,7 @@ class TemplateList(Resource):
         """
         return FormInstance.query.all(), 200
 
-    # @oidc.accept_token(require_token=True)
+    @oidc.accept_token(require_token=True)
     @api.marshal_with(forminstance)
     @api.doc(params={
         'version': 'Form template version (optional)'
@@ -56,7 +56,7 @@ class TemplateList(Resource):
 })
 class Template(Resource):
 
-    # @oidc.accept_token(require_token=True)
+    @oidc.accept_token(require_token=True)
     @api.marshal_with(forminstance)
     def get(self, uuid):
         """
@@ -68,7 +68,7 @@ class Template(Resource):
 @api.route('/versions')
 class Versions(Resource):
 
-    # @oidc.accept_token(require_token=True)
+    @oidc.accept_token(require_token=True)
     def get(self):
         """
         Get all available form versions.

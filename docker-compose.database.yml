@@ -1,0 +1,29 @@
+version: '3.2'
+
+services:
+  cockroach-ui:
+    image: cockroachdb/cockroach
+    command: start --insecure
+    expose:
+     - "8888"
+     - "26257"
+    ports:
+     - "127.0.0.1:26257:26257"
+     - "127.0.0.1:8888:8080"
+    networks:
+     - oapinet
+  cockroach-db-1:
+    image: cockroachdb/cockroach
+    command: start --insecure --join=cockroach-ui
+    networks:
+     - oapinet
+    volumes:
+     - ./cockroach_data/cockroach-db-1:/cockroach/cockroach-data
+  cockroach-init:
+   image: cockroachdb/cockroach
+   networks:
+    - oapinet
+   volumes:
+     - ${PWD}/scripts:/scripts
+   entrypoint: "/bin/bash"
+   command: /scripts/setup_cockroachdb.sh

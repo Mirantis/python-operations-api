@@ -1,12 +1,21 @@
 version: '3.2'
+
 services:
   keycloak:
     image: jboss/keycloak:4.2.0.Final
-
+    networks:
+      - oapinet
     ports:
       - 127.0.0.1:8080:8080
-
     environment:
       KEYCLOAK_USER: 'admin'
       KEYCLOAK_PASSWORD: 'default'
       PATH: '$PATH:keycloak/bin'
+  keycloak-init:
+   image: jboss/keycloak:4.2.0.Final
+   networks:
+    - oapinet
+   volumes:
+     - ${PWD}/scripts:/scripts
+   entrypoint: "/bin/bash"
+   command: /scripts/setup_keycloak.sh
