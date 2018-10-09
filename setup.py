@@ -25,7 +25,8 @@ setup(
         'ipaddress==1.0.18',
         'pygerrit2==2.0.7',
         'PyYAML==3.11',
-        'SQLAlchemy-Utils==0.33.5'
+        'SQLAlchemy-Utils==0.33.5',
+        'requests==2.19.1'
     ],
     tests_require=[
         'flake8'

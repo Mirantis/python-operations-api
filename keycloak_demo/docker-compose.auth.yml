@@ -1,0 +1,15 @@
+version: '3.2'
+services:
+  keycloak:
+    image: jboss/keycloak:4.2.0.Final
+
+    ports:
+      - 127.0.0.1:8080:8080
+#    command:
+
+#      - configure-realm.sh
+#      - ./keycloak/bin/standalone.sh
+    environment:
+      KEYCLOAK_USER: 'admin'
+      KEYCLOAK_PASSWORD: 'default'
+      PATH: '$PATH:keycloak/bin'
