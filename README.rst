@@ -17,11 +17,11 @@ Requirements
 Installation notes
 ------------------
 
-- Start CockroachDB server
+- Start backend services (CockroachDB, Keycloak)
 
   ::
 
-    docker-compose up -d
+    ./bootstrap_env.sh up
 
 - Tested with:
 
