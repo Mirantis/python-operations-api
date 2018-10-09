@@ -4,7 +4,7 @@ import json
 from flask import request
 from flask_restplus import Namespace, Resource, fields
 from operations_api.app import oidc
-
+from requests.exceptions import ConnectionError
 
 api = Namespace('auth', description='Authentication methods')
 
@@ -31,6 +31,8 @@ class AuthCollection(Resource):
         password = request.json.get("password")
         data = {"client_id": client_id, "client_secret": client_secret,
                 "grant_type": grant_type, "username": username, "password": password}
-        response = requests.post(token_uri, headers=headers, data=data)
-
+        try:
+            response = requests.post(token_uri, headers=headers, data=data)
+        except ConnectionError:
+            return 'Unable to connect to keycloak server. Check client_secrets config'.format(token_uri), 400
         return json.loads(response.text), response.status_code

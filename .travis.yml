@@ -15,7 +15,15 @@ jobs:
     - pipenv install --dev --skip-lock
     script:
     - python3 -m flake8
-
+  - stage: test
+    before_install:
+    - ./keycloak_demo/start-keycloak-demo.sh
+    install:
+    - pip install pipenv
+    - pipenv --python 3.6
+    - pipenv install --dev --skip-lock
+    script:
+    - pytest operations_api/tests
 
 notifications:
   webhooks:

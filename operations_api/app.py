@@ -25,9 +25,8 @@ def configure_app(flask_app):
 
 
 def configure_app_auth(flask_app):
-    # TODO: Use parameters from config
-    flask_app.config['OIDC_CLIENT_SECRETS'] = 'operations_api/config/client_secrets.json'
-    flask_app.config['OIDC_OPENID_REALM'] = 'Demo'
+    flask_app.config['OIDC_CLIENT_SECRETS'] = settings.OIDC_CLIENT_SECRETS
+    flask_app.config['OIDC_OPENID_REALM'] = settings.OIDC_OPENID_REALM
     flask_app.config['OIDC_INTROSPECTION_AUTH_METHOD'] = 'bearer'
     flask_app.config['SCOPES'] = ['openid']
     flask_app.config['OIDC_INTROSPECTION_AUTH_METHOD'] = 'client_secret_post'
