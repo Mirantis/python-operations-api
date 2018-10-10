@@ -6,6 +6,7 @@ python:
 env:
   global:
     - PIP_PROCESS_DEPENDENCY_LINKS=1
+    - BOOTSTRAP_NOAPP=true
 jobs:
   include:
   - stage: test

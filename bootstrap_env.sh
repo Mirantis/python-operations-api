@@ -10,7 +10,13 @@ fi
 command -v docker >/dev/null 2>&1 || { echo >&2 "bootstrap_env requires docker but it's not installed. Aborting."; exit 1; }
 command -v docker-compose >/dev/null 2>&1 || { echo >&2 "bootstrap_env requires docker-compose but it's not installed. Aborting."; exit 1; }
 
-COMPOSE="docker-compose -f docker-compose.yml -f docker-compose.database.yml -f docker-compose.auth.yml"
+if [ "$BOOTSTRAP_NOAPP" = true ]; then
+    COMPOSE="docker-compose -f docker-compose.noapp.yml -f docker-compose.database.yml -f docker-compose.auth.yml"
+    SERVICE_LIST="\nKeycloak:\nhttp://localhost:8080\n\nCockroachDB:\nhttp://localhost:8888\nhttp://localhost:26257\n"
+else
+    COMPOSE="docker-compose -f docker-compose.yml -f docker-compose.database.yml -f docker-compose.auth.yml"
+    SERVICE_LIST="\nKeycloak:\nhttp://localhost:8080\n\nCockroachDB:\nhttp://localhost:8888\nhttp://localhost:26257\n\nOperations API:\nhttp://localhost:8001\n"
+fi
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 NC='\033[0m'
@@ -32,7 +38,7 @@ if [ "$1" = "up" ]; then
             CR_EXIT=$(docker inspect $CR_ID --format='{{.State.ExitCode}}')
             if [ "$KC_EXIT" -eq "0" ] && [ "$CR_EXIT" -eq "0" ]; then
                 echo -e "${GREEN}[ All services started ]${NC}"
-                echo -e "\nKeycloak:\nhttp://localhost:8080\n\nCockroachDB:\nhttp://localhost:8888\nhttp://localhost:26257\n\nOperations API:\nhttp://localhost:8001\n"
+                echo -e "$SERVICE_LIST"
                 exit 0
             else
                 echo -e "${RED}[ Init containers failed, aborting ]${NC}"
