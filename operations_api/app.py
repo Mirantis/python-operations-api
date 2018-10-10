@@ -53,16 +53,16 @@ def create_app():
     configure_app_modelform(flask_app)
     register_extensions(flask_app)
     flask_app.register_blueprint(api, url_prefix='/api/v1')
+    flask_app.app_context().push()
+    db.create_all()
     return flask_app
 
+app = create_app()
 
 def run():
-    app = create_app()
-    app.app_context().push()
     # TODO: remove after switching to proper database
     if app.config['ENV'] == 'development':
         db.drop_all()
-        db.create_all()
     log.info('>>>>> Starting server at http://{0}:{1}/api/ <<<<<'.format(app.config['FLASK_SERVER_HOST'],
                                                                          app.config['FLASK_SERVER_PORT']))
     app.run(host=app.config['FLASK_SERVER_HOST'],

@@ -1,4 +1,4 @@
-from operations_api import app as application
+from operations_api.app import app as application
 
 if __name__ == '__main__':
     """

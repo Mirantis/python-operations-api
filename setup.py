@@ -22,6 +22,7 @@ setup(
         'flask-restplus==0.12.1',
         'flask-swagger-ui',
         'flask_sqlalchemy==2.3.2',
+        'gunicorn==19.9.0',
         'ipaddress==1.0.18',
         'pygerrit2==2.0.7',
         'PyYAML==3.11',

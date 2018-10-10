@@ -16,7 +16,7 @@ GREEN='\033[0;32m'
 NC='\033[0m'
 
 if [ "$1" = "up" ]; then
-    echo -e "${GREEN}[ Starting backend services ]${NC}"
+    echo -e "${GREEN}[ Starting all services ]${NC}"
     $COMPOSE up -d
     echo -e "${GREEN}[ Waiting for init containers ]${NC}"
     COUNTER=0
@@ -32,6 +32,7 @@ if [ "$1" = "up" ]; then
             CR_EXIT=$(docker inspect $CR_ID --format='{{.State.ExitCode}}')
             if [ "$KC_EXIT" -eq "0" ] && [ "$CR_EXIT" -eq "0" ]; then
                 echo -e "${GREEN}[ All services started ]${NC}"
+                echo -e "\nKeycloak:\nhttp://localhost:8080\n\nCockroachDB:\nhttp://localhost:8888\nhttp://localhost:26257\n\nOperations API:\nhttp://localhost:8001\n"
                 exit 0
             else
                 echo -e "${RED}[ Init containers failed, aborting ]${NC}"
@@ -53,7 +54,7 @@ if [ "$1" = "up" ]; then
     docker logs $CR_ID
     exit 1
 elif [ "$1" = "down" ]; then
-    echo -e "${GREEN}[ Stopping backend services ]${NC}"
+    echo -e "${GREEN}[ Stopping all services ]${NC}"
     $COMPOSE down -v
     echo -e "${GREEN}[ Removing local DB ]${NC}"
     rm -rf cockroach_data
