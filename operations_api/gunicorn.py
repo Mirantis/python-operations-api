@@ -1,7 +1,6 @@
 from operations_api.config.settings import FLASK_SERVER_HOST, FLASK_SERVER_PORT
 
 import multiprocessing
-import os
 
 bind = "{host}:{port}".format(
     host=FLASK_SERVER_HOST,

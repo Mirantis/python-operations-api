@@ -57,7 +57,9 @@ def create_app():
     db.create_all()
     return flask_app
 
+
 app = create_app()
+
 
 def run():
     # TODO: remove after switching to proper database
