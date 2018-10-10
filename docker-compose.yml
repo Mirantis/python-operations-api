@@ -1,0 +1,28 @@
+version: '3.2'
+
+services:
+  operations-api:
+    build: ./
+    ports:
+      - 127.0.0.1:8001:8001
+    networks:
+      - oapinet
+    depends_on:
+      - cockroach-db-1
+      - keycloak
+    restart: on-failure:0
+    environment:
+      OAPI_OIDC_CLIENT_SECRETS: 'operations_api/config/client_secrets_docker.json'
+      OAPI_SQLALCHEMY_DATABASE_URI: 'cockroachdb://oapi@cockroach-ui:26257/oapi'
+      OAPI_FLASK_DEBUG: 'false'
+      OAPI_FLASK_SECRET_KEY: 'secretsecretsecret'
+      OAPI_FLASK_SERVER_HOST: '0.0.0.0'
+
+networks:
+  oapinet:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        -
+          subnet: 172.16.252.0/24

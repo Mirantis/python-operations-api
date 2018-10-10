@@ -17,6 +17,17 @@ Requirements
 Installation notes
 ------------------
 
+- Start backend services (CockroachDB, Keycloak)
+
+  ::
+
+    ./bootstrap_env.sh up
+
+- Tested with:
+
+   - Docker 17.03.2-ce
+   - Docker Compose 1.22.0
+
 - Prepare python virtual environment
 
   ::

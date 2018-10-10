@@ -6,6 +6,7 @@ python:
 env:
   global:
     - PIP_PROCESS_DEPENDENCY_LINKS=1
+    - BOOTSTRAP_NOAPP=true
 jobs:
   include:
   - stage: test
@@ -17,7 +18,7 @@ jobs:
     - python3 -m flake8
   - stage: test
     before_install:
-    - ./keycloak_demo/start-keycloak-demo.sh
+    - ./bootstrap_env.sh up
     install:
     - pip install pipenv
     - pipenv --python 3.6

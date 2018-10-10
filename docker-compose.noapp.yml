@@ -1,0 +1,10 @@
+version: '3.2'
+
+networks:
+  oapinet:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        -
+          subnet: 172.16.252.0/24

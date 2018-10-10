@@ -14,9 +14,6 @@ db.sqlite
 # CockroachDB local data
 cockroach_data/
 
-# local settings
-operations_api/local_settings.py
-
 # Distribution / packaging
 .Python
 env/
