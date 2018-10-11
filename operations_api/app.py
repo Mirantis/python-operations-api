@@ -1,5 +1,4 @@
 import logging.config
-import os
 
 from flask import Flask
 
@@ -64,8 +63,8 @@ def describe_app(flask_app):
     description += '[ RULES ]\n\n'
     for rule in flask_app.url_map._rules:
         description += '{} - {} - {}\n'.format(rule.rule,
-                                       ', '.join(rule.methods),
-                                       rule.endpoint)
+                                               ', '.join(rule.methods),
+                                               rule.endpoint)
     description += '\n[ CONFIG ]\n\n'
     for key, value in flask_app.config.items():
         description += '{}: {}\n'.format(key, value)

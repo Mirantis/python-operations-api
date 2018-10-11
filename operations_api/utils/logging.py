@@ -1,7 +1,5 @@
-import inspect
 import logging.config
 import logging
-import sys
 import yaml
 
 from os.path import dirname, exists, join, normpath
