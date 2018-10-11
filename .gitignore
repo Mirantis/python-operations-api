@@ -1,5 +1,6 @@
 # virtualenv
 venv/
+.python-version
 
 # editor files
 .*.swp
