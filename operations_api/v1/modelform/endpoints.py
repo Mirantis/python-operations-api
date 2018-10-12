@@ -27,7 +27,7 @@ class Resource(ClassLoggerMixin, RestplusResource):
     pass
 
 
-@api.route('/template')
+@api.route('/templates')
 @api.doc(headers={
     'Authorization': 'Bearer {access_token}'
 })
@@ -67,7 +67,7 @@ class TemplateList(Resource):
         return instance, 200
 
 
-@api.route('/template/<string:uuid>')
+@api.route('/templates/<string:uuid>')
 @api.doc(headers={
     'Authorization': 'Bearer {access_token}'
 })
