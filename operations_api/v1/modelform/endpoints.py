@@ -1,3 +1,6 @@
+import ast
+import json
+
 from flask import request
 from flask_restplus import fields, Namespace, Resource as RestplusResource
 
@@ -6,11 +9,17 @@ from operations_api.database.models import FormInstance
 from operations_api.utils.logging import ClassLoggerMixin
 from operations_api.v1.modelform.utils import FormTemplateCollector
 
+
+class ValidJSON(fields.Raw):
+    def format(self, value):
+        return json.dumps(ast.literal_eval(value))
+
+
 api = Namespace('modelform', description='Model Form related operations')
 
 forminstance = api.model('FormInstance', {
     'id': fields.String,
-    'template': fields.String
+    'template': ValidJSON(attribute='template')
 })
 
 
