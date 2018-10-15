@@ -1,15 +1,14 @@
 import logging.config
-import os
 
 from flask import Flask
 
 from operations_api.config import settings
 from operations_api.extensions import cache, db, oidc  # noqa
+from operations_api.utils.logging import setup_logging
 from operations_api.v1 import blueprint as api
 
-logging_conf_path = os.path.normpath(os.path.join(os.path.dirname(__file__), 'config', 'logging.conf'))
-logging.config.fileConfig(logging_conf_path)
-log = logging.getLogger('operations_api')
+setup_logging(settings.FLASK_DEBUG, settings.FLASK_LOG_CONFIG)
+logger = logging.getLogger('operations_api')
 
 
 def configure_app(flask_app):
@@ -17,6 +16,7 @@ def configure_app(flask_app):
     flask_app.config['FLASK_SERVER_PORT'] = int(settings.FLASK_SERVER_PORT)
     flask_app.config['SECRET_KEY'] = settings.FLASK_SECRET_KEY
     flask_app.config['SQLALCHEMY_DATABASE_URI'] = settings.SQLALCHEMY_DATABASE_URI
+    flask_app.config['SQLALCHEMY_ECHO'] = settings.SQLALCHEMY_ECHO
     flask_app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = settings.SQLALCHEMY_TRACK_MODIFICATIONS
     flask_app.config['SWAGGER_UI_DOC_EXPANSION'] = settings.RESTPLUS_SWAGGER_UI_DOC_EXPANSION
     flask_app.config['RESTPLUS_VALIDATE'] = settings.RESTPLUS_VALIDATE
@@ -58,15 +58,28 @@ def create_app():
     return flask_app
 
 
+def describe_app(flask_app):
+    description = '\n'
+    description += '[ RULES ]\n\n'
+    for rule in flask_app.url_map._rules:
+        description += '{} - {} - {}\n'.format(rule.rule,
+                                               ', '.join(rule.methods),
+                                               rule.endpoint)
+    description += '\n[ CONFIG ]\n\n'
+    for key, value in flask_app.config.items():
+        description += '{}: {}\n'.format(key, value)
+    return description
+
+
 app = create_app()
 
 
 def run():
-    # TODO: remove after switching to proper database
-    if app.config['ENV'] == 'development':
+    if app.env == 'development':
+        logger.debug(describe_app(app))
+        # TODO: remove after switching to proper database
         db.drop_all()
-    log.info('>>>>> Starting server at http://{0}:{1}/api/ <<<<<'.format(app.config['FLASK_SERVER_HOST'],
-                                                                         app.config['FLASK_SERVER_PORT']))
+
     app.run(host=app.config['FLASK_SERVER_HOST'],
             port=app.config['FLASK_SERVER_PORT'],
             debug=settings.FLASK_DEBUG)

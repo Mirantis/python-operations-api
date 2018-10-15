@@ -23,7 +23,7 @@ NC='\033[0m'
 
 if [ "$1" = "up" ]; then
     echo -e "${GREEN}[ Starting all services ]${NC}"
-    $COMPOSE up -d
+    $COMPOSE up -d --build
     echo -e "${GREEN}[ Waiting for init containers ]${NC}"
     COUNTER=0
     KC_ID=$(docker-compose -f docker-compose.yml -f docker-compose.database.yml -f docker-compose.auth.yml ps -q keycloak-init)

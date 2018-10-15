@@ -2,8 +2,9 @@ import requests
 import json
 
 from flask import request
-from flask_restplus import Namespace, Resource, fields
+from flask_restplus import fields, Namespace, Resource as RestplusResource
 from operations_api.app import oidc
+from operations_api.utils.logging import ClassLoggerMixin
 from requests.exceptions import ConnectionError
 
 api = Namespace('auth', description='Authentication methods')
@@ -14,8 +15,13 @@ auth = api.model('AuthCollection', {
 })
 
 
+class Resource(ClassLoggerMixin, RestplusResource):
+    pass
+
+
 @api.route('/login')
 class AuthCollection(Resource):
+
     @api.expect(auth)
     def post(self):
         """

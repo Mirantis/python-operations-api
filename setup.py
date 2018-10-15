@@ -30,7 +30,7 @@ setup(
         'requests==2.19.1',
         # CockroachDB
         'cockroachdb==0.2.1',
-        'psycopg2==2.7.5',
+        'psycopg2==2.7.3.2',
     ],
     tests_require=[
         'flake8'
