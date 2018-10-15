@@ -1,6 +1,7 @@
 import ast
 import json
 
+from datetime import datetime
 from flask import request
 from flask_restplus import fields, Namespace, Resource as RestplusResource
 
@@ -19,7 +20,8 @@ api = Namespace('modelform', description='Model Form related operations')
 
 forminstance = api.model('FormInstance', {
     'id': fields.String,
-    'template': ValidJSON(attribute='template')
+    'template': ValidJSON(attribute='template'),
+    'created_at': fields.DateTime
 })
 
 
@@ -60,7 +62,8 @@ class TemplateList(Resource):
                 msg = 'Invalid version, valid versions are: {}'.format(', '.join(versions))
                 api.abort(400, msg)
             version = request.args.get('version')
-        instance = FormInstance(template=ftc.render(version))
+        created_at = datetime.utcnow().replace(microsecond=0)
+        instance = FormInstance(template=ftc.render(version), created_at=created_at)
         db.session.add(instance)
         db.session.commit()
         self.logger.debug('object: {}'.format(instance))

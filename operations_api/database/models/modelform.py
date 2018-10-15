@@ -21,3 +21,4 @@ class FormInstance(db.Model):
                                        SECRET_KEY,
                                        AesEngine,
                                        'pkcs5'))
+    created_at = db.Column(db.DateTime)
