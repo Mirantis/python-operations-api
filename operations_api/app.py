@@ -3,7 +3,7 @@ import logging.config
 from flask import Flask
 
 from operations_api.config import settings
-from operations_api.extensions import cache, db, oidc  # noqa
+from operations_api.extensions import cache, db, oidc, cors  # noqa
 from operations_api.utils.logging import setup_logging
 from operations_api.v1 import blueprint as api
 
@@ -44,6 +44,7 @@ def configure_app_modelform(flask_app):
 def register_extensions(flask_app):
     db.init_app(flask_app)
     oidc.init_app(flask_app)
+    cors.init_app(flask_app)
 
 
 def create_app():

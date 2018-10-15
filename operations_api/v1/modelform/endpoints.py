@@ -1,3 +1,7 @@
+import ast
+import json
+
+from datetime import datetime
 from flask import request
 from flask_restplus import fields, Namespace, Resource as RestplusResource
 
@@ -6,11 +10,18 @@ from operations_api.database.models import FormInstance
 from operations_api.utils.logging import ClassLoggerMixin
 from operations_api.v1.modelform.utils import FormTemplateCollector
 
+
+class ValidJSON(fields.Raw):
+    def format(self, value):
+        return json.dumps(ast.literal_eval(value))
+
+
 api = Namespace('modelform', description='Model Form related operations')
 
 forminstance = api.model('FormInstance', {
     'id': fields.String,
-    'template': fields.String
+    'template': ValidJSON(attribute='template'),
+    'created_at': fields.DateTime
 })
 
 
@@ -18,7 +29,7 @@ class Resource(ClassLoggerMixin, RestplusResource):
     pass
 
 
-@api.route('/template')
+@api.route('/templates')
 @api.doc(headers={
     'Authorization': 'Bearer {access_token}'
 })
@@ -51,14 +62,15 @@ class TemplateList(Resource):
                 msg = 'Invalid version, valid versions are: {}'.format(', '.join(versions))
                 api.abort(400, msg)
             version = request.args.get('version')
-        instance = FormInstance(template=ftc.render(version))
+        created_at = datetime.utcnow().replace(microsecond=0)
+        instance = FormInstance(template=ftc.render(version), created_at=created_at)
         db.session.add(instance)
         db.session.commit()
         self.logger.debug('object: {}'.format(instance))
         return instance, 200
 
 
-@api.route('/template/<string:uuid>')
+@api.route('/templates/<string:uuid>')
 @api.doc(headers={
     'Authorization': 'Bearer {access_token}'
 })

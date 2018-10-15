@@ -18,6 +18,7 @@ setup(
         'cryptography==2.3.1',
         'docutils==0.13.1',
         'Flask==1.0.2',
+        'flask_cors==3.0.6',
         'flask_oidc==1.4.0',
         'flask-restplus==0.12.1',
         'flask-swagger-ui',
