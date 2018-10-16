@@ -26,6 +26,7 @@ setup(
         'gunicorn==19.9.0',
         'ipaddress==1.0.18',
         'pygerrit2==2.0.7',
+        'python-jenkins==1.2.1',
         'PyYAML==3.11',
         'SQLAlchemy-Utils==0.33.5',
         'requests==2.19.1',
