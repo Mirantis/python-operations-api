@@ -74,6 +74,7 @@ class TemplateList(Resource):
 @api.doc(headers={
     'Authorization': 'Bearer {access_token}'
 })
+# TODO: Add uuid validation
 class Template(Resource):
 
     @oidc.accept_token(require_token=True)
@@ -85,6 +86,17 @@ class Template(Resource):
         instance = FormInstance.query.get(uuid)
         self.logger.debug('object: {}'.format(instance))
         return instance, 200
+
+    @oidc.accept_token(require_token=True)
+    def delete(self, uuid):
+        """
+        Delete form template by UUID.
+        """
+        instance = FormInstance.query.get(uuid)
+        db.session.delete(instance)
+        db.session.commit()
+        self.logger.debug('object: {}'.format(instance))
+        return 'Object with {0} deleted successfully'.format(uuid), 200
 
 
 @api.route('/versions')
