@@ -1,7 +1,8 @@
 FROM python:3.6-slim
 
-# prepare directory
+# prepare system
 WORKDIR /code
+RUN apt update -qq && apt install jq -y
 
 # setup directory for logging
 RUN mkdir /var/log/operations_api

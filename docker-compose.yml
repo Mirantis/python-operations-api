@@ -12,7 +12,18 @@ services:
       - keycloak
     restart: on-failure:0
     environment:
-      OAPI_OIDC_CLIENT_SECRETS: 'operations_api/config/client_secrets_docker.json'
+      OAPI_OIDC_CLIENT_SECRETS_OVERRIDE: |
+        {
+          "web": {
+            "client_id": "kate-test",
+            "client_secret": "f5c15d4b-d8f6-489c-9f3a-df790a44cbe1",
+            "auth_uri": "http://keycloak:8080/auth/realms/demo/protocol/openid-connect/auth",
+            "token_uri": "http://keycloak:8080/auth/realms/demo/protocol/openid-connect/token",
+            "token_introspection_uri": "http://keycloak:8080/auth/realms/demo/protocol/openid-connect/token/introspect",
+            "issuer": "http://keycloak:8080/auth/realms/demo",
+            "userinfo_uri": "http://keycloak:8080/auth/realms/demo/protocol/openid-connect/userinfo"
+          }
+        }
       OAPI_SQLALCHEMY_DATABASE_URI: 'cockroachdb://oapi@cockroach-ui:26257/oapi'
       OAPI_SQLALCHEMY_ECHO: 'false'
       OAPI_FLASK_DEBUG: 'false'
