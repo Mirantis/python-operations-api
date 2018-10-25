@@ -1,6 +1,7 @@
 import ast
 import jenkins
 import json
+import yaml
 
 from datetime import datetime
 from flask import current_app as app, request
@@ -29,6 +30,27 @@ forminstance = api.model('FormInstance', {
 
 class Resource(ClassLoggerMixin, RestplusResource):
     pass
+
+
+def should_use_block(value):
+    for c in u"\u000a\u000d\u001c\u001d\u001e\u0085\u2028\u2029":
+        if c in value:
+            return True
+    return False
+
+
+def yaml_represent_scalar(self, tag, value, style=None):
+    if style is None:
+        if should_use_block(value):
+            style = '|'
+            value = value.replace('\r', '')
+        else:
+            style = self.default_style
+
+    node = yaml.representer.ScalarNode(tag, value, style=style)
+    if self.alias_key is not None:
+        self.represented_objects[self.alias_key] = node
+    return node
 
 
 @api.route('/templates')
@@ -153,16 +175,22 @@ class Submit(Resource):
             'offline_deployment': app.config.get('MODELFORM_OFFLINE_DEPLOYMENT', False),
             # TODO: change default template_url after import to Mirantis namespace
             'cookiecutter_template_url': app.config.get('MODELFORM_COOKIECUTTER_TEMPLATE_URL',
-                                                        'https://github.com/LotharKAtt/cookiecutter-trymcp.git'),
+                                                        'https://github.com/atengler/cookiecutter-trymcp.git'),
             'cookiecutter_template_branch': app.config.get('MODELFORM_COOKIECUTTER_TEMPLATE_BRANCH', 'master')
         }
         default_context.update(form_data)
+
+        for key, value in default_context.items():
+            if isinstance(value, bool):
+                default_context[key] = str(value)
+
         template_context = {'default_context': default_context}
 
         # Setup Jenkins pipeline, by overriding default values with template
         #  context values of the same name
+        #yaml.representer.BaseRepresenter.represent_scalar = yaml_represent_scalar
         pipeline_context = {
-            'COOKIECUTTER_TEMPLATE_CONTEXT': template_context,
+            'COOKIECUTTER_TEMPLATE_CONTEXT': yaml.safe_dump(template_context),
             'DISTRIB_REVISION': 'proposed',
             'EMAIL_ADDRESS': '',
             'TEST_MODEL': True
