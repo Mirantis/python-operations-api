@@ -80,6 +80,7 @@ def run():
         logger.debug(describe_app(app))
         # TODO: remove after switching to proper database
         db.drop_all()
+        db.create_all()
 
     app.run(host=app.config['FLASK_SERVER_HOST'],
             port=app.config['FLASK_SERVER_PORT'],
