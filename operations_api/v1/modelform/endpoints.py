@@ -32,27 +32,6 @@ class Resource(ClassLoggerMixin, RestplusResource):
     pass
 
 
-def should_use_block(value):
-    for c in u"\u000a\u000d\u001c\u001d\u001e\u0085\u2028\u2029":
-        if c in value:
-            return True
-    return False
-
-
-def yaml_represent_scalar(self, tag, value, style=None):
-    if style is None:
-        if should_use_block(value):
-            style = '|'
-            value = value.replace('\r', '')
-        else:
-            style = self.default_style
-
-    node = yaml.representer.ScalarNode(tag, value, style=style)
-    if self.alias_key is not None:
-        self.represented_objects[self.alias_key] = node
-    return node
-
-
 @api.route('/templates')
 @api.doc(headers={
     'Authorization': 'Bearer {access_token}'
@@ -175,7 +154,7 @@ class Submit(Resource):
             'offline_deployment': app.config.get('MODELFORM_OFFLINE_DEPLOYMENT', False),
             # TODO: change default template_url after import to Mirantis namespace
             'cookiecutter_template_url': app.config.get('MODELFORM_COOKIECUTTER_TEMPLATE_URL',
-                                                        'https://github.com/atengler/cookiecutter-trymcp.git'),
+                                                        'https://github.com/LotharKAtt/cookiecutter-trymcp.git'),
             'cookiecutter_template_branch': app.config.get('MODELFORM_COOKIECUTTER_TEMPLATE_BRANCH', 'master')
         }
         default_context.update(form_data)
@@ -188,18 +167,21 @@ class Submit(Resource):
 
         # Setup Jenkins pipeline, by overriding default values with template
         #  context values of the same name
-        #yaml.representer.BaseRepresenter.represent_scalar = yaml_represent_scalar
         pipeline_context = {
-            'COOKIECUTTER_TEMPLATE_CONTEXT': yaml.safe_dump(template_context),
+            'COOKIECUTTER_TEMPLATE_CONTEXT': yaml.safe_dump(template_context)
+        }
+        default_pipeline_context = {
             'DISTRIB_REVISION': 'proposed',
             'EMAIL_ADDRESS': '',
             'TEST_MODEL': True
         }
+        additional_context = app.config.get('MODELFORM_PIPELINE_CONTEXT', default_pipeline_context)
+        pipeline_context.update(additional_context)
         for key in pipeline_context:
             if key.lower() in default_context and default_context.get(key.lower(), None):
                 pipeline_context[key] = default_context[key.lower()]
 
-        pipeline_name = app.config.get('MODELFORM_PIPELINE_NAME')
+        pipeline_name = app.config.get('MODELFORM_PIPELINE_NAME', )
         if not pipeline_name:
             msg = 'Configuration key MODELFORM_PIPELINE_NAME is required'
             raise exceptions.ImproperlyConfigured(msg)
