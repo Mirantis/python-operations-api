@@ -38,7 +38,7 @@ class Resource(ClassLoggerMixin, RestplusResource):
 })
 class TemplateList(Resource):
 
-    @oidc.accept_token(require_token=True)
+    # @oidc.accept_token(require_token=True)
     @api.marshal_list_with(forminstance)
     def get(self):
         """
@@ -48,7 +48,7 @@ class TemplateList(Resource):
         self.logger.debug('objects: {}, count: {}'.format(_list, len(_list)))
         return FormInstance.query.all(), 200
 
-    @oidc.accept_token(require_token=True)
+    # @oidc.accept_token(require_token=True)
     @api.marshal_with(forminstance)
     @api.doc(params={
         'version': 'Form template version (optional)'
@@ -80,7 +80,7 @@ class TemplateList(Resource):
 # TODO: Add uuid validation
 class Template(Resource):
 
-    @oidc.accept_token(require_token=True)
+    # @oidc.accept_token(require_token=True)
     @api.marshal_with(forminstance)
     def get(self, uuid):
         """
@@ -90,7 +90,7 @@ class Template(Resource):
         self.logger.debug('object: {}'.format(instance))
         return instance, 200
 
-    @oidc.accept_token(require_token=True)
+    # @oidc.accept_token(require_token=True)
     def delete(self, uuid):
         """
         Delete form template by UUID.
@@ -105,7 +105,7 @@ class Template(Resource):
 @api.route('/versions')
 class Versions(Resource):
 
-    @oidc.accept_token(require_token=True)
+    # @oidc.accept_token(require_token=True)
     def get(self):
         """
         Get all available form versions.
@@ -131,7 +131,7 @@ class Submit(Resource):
             msg = 'Configuration keys {}, {} and {} are required.'.format(keys)
             raise exceptions.ImproperlyConfigured(msg)
 
-    @oidc.accept_token(require_token=True)
+    # @oidc.accept_token(require_token=True)
     def post(self):
         """
         Construct Jenkins pipeline context with default context and
