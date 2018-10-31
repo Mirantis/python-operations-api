@@ -181,7 +181,7 @@ class Submit(Resource):
             if key.lower() in default_context and default_context.get(key.lower(), None):
                 pipeline_context[key] = default_context[key.lower()]
 
-        pipeline_name = app.config.get('MODELFORM_PIPELINE_NAME', )
+        pipeline_name = app.config.get('MODELFORM_PIPELINE_NAME', 'deploy_trymcp')
         if not pipeline_name:
             msg = 'Configuration key MODELFORM_PIPELINE_NAME is required'
             raise exceptions.ImproperlyConfigured(msg)
